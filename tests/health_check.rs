@@ -22,7 +22,6 @@ async fn health_check_works() {
     assert_eq!(Some(0), response.content_length());
 }
 
-
 // [...]
 // No .await call, therefore no need for `spawn_app` to be async now.
 // We are also running tests, so it is not worth it to propagate errors:
