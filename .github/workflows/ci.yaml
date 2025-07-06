@@ -1,0 +1,42 @@
+name: Rust CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Setup a specific version of Rust (or use the default stable)
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      # Install necessary tools (cargo audit)
+      - name: Install Dependencies
+        run: |
+          rustup component add rustfmt
+          cargo install cargo-audit
+
+      # Run `cargo fmt` and fail if there are formatting issues
+      - name: Run cargo fmt --check
+        run: cargo fmt --check
+
+      # Run tests
+      - name: Run tests
+        run: cargo test --all --all-features --all-targets
+
+      # Run `cargo audit` to check for vulnerable dependencies
+      - name: Audit Dependencies
+        run: cargo audit
